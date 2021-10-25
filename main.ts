@@ -1,3 +1,29 @@
+/**
+ * LH pad, left button
+ */
+/**
+ * RH pad, bottom button
+ */
+/**
+ * RH pad, top button
+ */
+/**
+ * left motor forward
+ */
+/**
+ * right motor forward
+ */
+/**
+ * when ==1, invert motor control (eg. pin12=0 then means right motor backward)
+ */
+bluetooth.onBluetoothConnected(function () {
+    setMovement(movement.STOP)
+basic.showString("C")
+})
+bluetooth.onBluetoothDisconnected(function () {
+    setMovement(movement.STOP)
+basic.showString("D")
+})
 input.onButtonPressed(Button.A, function () {
     if (pin8 == 1) {
         pin8 = 0
@@ -32,17 +58,6 @@ input.onButtonPressed(Button.B, function () {
         basic.showString("B")
     }
 })
-
-enum movement {
-    LEFT_FWD,
-    RIGHT_FWD,
-    FORWARD,
-    LEFT_BACK,
-    RIGHT_BACK,
-    BACKWARD,
-    STOP
-}
-
 control.onEvent(EventBusSource.MES_DPAD_CONTROLLER_ID, EventBusValue.MICROBIT_EVT_ANY, function () {
     switch (control.eventValue()) {
         case EventBusValue.MES_DPAD_BUTTON_1_DOWN:
@@ -70,35 +85,45 @@ control.onEvent(EventBusSource.MES_DPAD_CONTROLLER_ID, EventBusValue.MICROBIT_EV
             buttond = 0;
             break;
     }
-    currentMovement = convertDpadToMovement()
+currentMovement = convertDpadToMovement()
     setMovement(currentMovement)
 })
-
-function convertDpadToMovement() {
-    if (button2 == 0)
-    {
-        if (buttonc == 1 && buttond == 0) return movement.LEFT_FWD;
-        else if (buttonc == 0 && buttond == 1) return movement.RIGHT_FWD;
-        else if (button1 == 1) return movement.FORWARD;
+function convertDpadToMovement () {
+    if (button2 == 0) {
+        if (buttonc == 1 && buttond == 0) {
+            return movement.LEFT_FWD
+        } else if (buttonc == 0 && buttond == 1) {
+            return movement.RIGHT_FWD
+        } else if (button1 == 1) {
+            return movement.FORWARD
+        }
+    } else if (button1 == 0) {
+        if (buttonc == 1 && buttond == 0) {
+            return movement.LEFT_BACK
+        } else if (buttonc == 0 && buttond == 1) {
+            return movement.RIGHT_BACK
+        } else {
+            return movement.BACKWARD
+        }
     }
-    else if (button1 == 0)
-    {
-        if (buttonc == 1 && buttond == 0) return movement.LEFT_BACK;
-        else if (buttonc == 0 && buttond == 1) return movement.RIGHT_BACK;
-        else return movement.BACKWARD;
-    }
-    return movement.STOP;
+    return movement.STOP
 }
-
-bluetooth.onBluetoothConnected(function () {
-    setMovement(movement.STOP)
-    basic.showString("C")
-})
-bluetooth.onBluetoothDisconnected(function () {
-    setMovement(movement.STOP)
-    basic.showString("D")
-})
-
+let buttond = 0
+let buttonc = 0
+let button2 = 0
+let button1 = 0
+let pin8 = 0
+let pin12 = 0
+let pin16 = 0
+enum movement {
+    LEFT_FWD,
+    RIGHT_FWD,
+    FORWARD,
+    LEFT_BACK,
+    RIGHT_BACK,
+    BACKWARD,
+    STOP
+}
 function setMovement(m: movement) {
     switch (m) {
         case movement.LEFT_FWD:
@@ -148,13 +173,6 @@ function setMovement(m: movement) {
     pins.digitalWritePin(DigitalPin.P12, pin12)
     pins.digitalWritePin(DigitalPin.P16, pin16)
 }
-let pin16 = 0       // when ==1, invert motor control (eg. pin12=0 then means right motor backward)
-let pin12 = 0       // right motor forward
-let pin8 = 0        // left motor forward
-let button1 = 0     // RH pad, top button
-let button2 = 0     // RH pad, bottom button
-let buttonc = 0     // LH pad, left button
-let buttond = 0     // RH pad, right button
 let currentMovement = movement.STOP
-basic.showString("1")
+basic.showString("2")
 setMovement(currentMovement)
