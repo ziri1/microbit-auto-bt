@@ -1,21 +1,3 @@
-/**
- * LH pad, left button
- */
-/**
- * RH pad, bottom button
- */
-/**
- * RH pad, top button
- */
-/**
- * left motor forward
- */
-/**
- * right motor forward
- */
-/**
- * when ==1, invert motor control (eg. pin12=0 then means right motor backward)
- */
 bluetooth.onBluetoothConnected(function () {
     setMovement(movement.STOP)
 basic.showString("C")
@@ -28,13 +10,7 @@ input.onButtonPressed(Button.A, function () {
     if (pin8 == 1) {
         pin8 = 0
         pins.digitalWritePin(DigitalPin.P8, pin8)
-        basic.showLeds(`
-            . . . . .
-            . . . . .
-            . . . . .
-            . . . . .
-            . . . . .
-            `)
+        basic.clearScreen()
     } else {
         pin8 = 1
         pins.digitalWritePin(DigitalPin.P8, pin8)
@@ -45,13 +21,7 @@ input.onButtonPressed(Button.B, function () {
     if (pin12 == 1) {
         pin12 = 0
         pins.digitalWritePin(DigitalPin.P12, pin12)
-        basic.showLeds(`
-            . . . . .
-            . . . . .
-            . . . . .
-            . . . . .
-            . . . . .
-            `)
+        basic.clearScreen()
     } else {
         pin12 = 1
         pins.digitalWritePin(DigitalPin.P12, pin12)
@@ -108,13 +78,15 @@ function convertDpadToMovement () {
     }
     return movement.STOP
 }
-let buttond = 0
-let buttonc = 0
-let button2 = 0
-let button1 = 0
-let pin8 = 0
-let pin12 = 0
-let pin16 = 0
+
+let buttond = 0 // LH pad, left button
+let buttonc = 0 // LH pad, right button
+let button2 = 0 // RH pad, bottom button
+let button1 = 0 // RH pad, top button
+let pin8 = 0    // left motor forward
+let pin12 = 0   // right motor forward
+let pin16 = 0   // when ==1, invert motor control (eg. pin12=0 then means right motor backward)
+
 enum movement {
     LEFT_FWD,
     RIGHT_FWD,
@@ -150,7 +122,7 @@ function setMovement(m: movement) {
             pin8 = 1;
             basic.showArrow(ArrowNames.SouthWest)
             break;
-        case movement.RIGHT_FWD:
+        case movement.RIGHT_BACK:
             pin16 = 1;
             pin12 = 1;
             pin8 = 0;
