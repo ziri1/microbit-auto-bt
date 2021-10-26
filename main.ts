@@ -42,6 +42,30 @@ control.onEvent(EventBusSource.MES_DPAD_CONTROLLER_ID, EventBusValue.MICROBIT_EV
         case EventBusValue.MES_DPAD_BUTTON_2_UP:
             button2 = 0;
             break;
+        case EventBusValue.MES_DPAD_BUTTON_3_DOWN:
+            button3 = 1;
+            break;
+        case EventBusValue.MES_DPAD_BUTTON_3_UP:
+            button3 = 0;
+            break;
+        case EventBusValue.MES_DPAD_BUTTON_4_DOWN:
+            button4 = 1;
+            break;
+        case EventBusValue.MES_DPAD_BUTTON_4_UP:
+            button4 = 0;
+            break;
+        case EventBusValue.MES_DPAD_BUTTON_A_DOWN:
+            buttona = 1;
+            break;
+        case EventBusValue.MES_DPAD_BUTTON_A_UP:
+            buttona = 0;
+            break;
+        case EventBusValue.MES_DPAD_BUTTON_B_DOWN:
+            buttonb = 1;
+            break;
+        case EventBusValue.MES_DPAD_BUTTON_B_UP:
+            buttonb = 0;
+            break;
         case EventBusValue.MES_DPAD_BUTTON_C_DOWN:
             buttonc = 1;
             break;
@@ -59,30 +83,25 @@ currentMovement = convertDpadToMovement()
     setMovement(currentMovement)
 })
 function convertDpadToMovement () {
-    if (button2 == 0) {
-        if (buttonc == 1 && buttond == 0) {
-            return movement.LEFT_FWD
-        } else if (buttonc == 0 && buttond == 1) {
-            return movement.RIGHT_FWD
-        } else if (button1 == 1) {
-            return movement.FORWARD
-        }
-    } else if (button1 == 0) {
-        if (buttonc == 1 && buttond == 0) {
-            return movement.LEFT_BACK
-        } else if (buttonc == 0 && buttond == 1) {
-            return movement.RIGHT_BACK
-        } else {
-            return movement.BACKWARD
-        }
-    }
+    let fwdButton = (button1 == 1) || (buttona == 1)
+    let backButton = (button2 == 1) || (buttonb == 1)
+    if (fwdButton && !backButton) return movement.FORWARD
+    if (!fwdButton && backButton) return movement.BACKWARD
+    if (buttonc == 1 && buttond == 0) return movement.LEFT_FWD
+    if (buttonc == 0 && buttond == 1) return movement.RIGHT_FWD
+    if (button3 == 1 && button4 == 0) return movement.LEFT_BACK
+    if (button3 == 0 && button4 == 1) return movement.RIGHT_BACK
     return movement.STOP
 }
 
-let buttond = 0 // LH pad, left button
+let buttona = 0 // LH pad, top button
+let buttonb = 0 // LH pad, bottom button
 let buttonc = 0 // LH pad, right button
-let button2 = 0 // RH pad, bottom button
+let buttond = 0 // LH pad, left button
 let button1 = 0 // RH pad, top button
+let button2 = 0 // RH pad, bottom button
+let button3 = 0 // RH pad, right button
+let button4 = 0 // RH pad, left button
 let pin8 = 0    // left motor forward
 let pin12 = 0   // right motor forward
 let pin16 = 0   // when ==1, invert motor control (eg. pin12=0 then means right motor backward)
